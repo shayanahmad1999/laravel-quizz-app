@@ -50,46 +50,145 @@ npm run dev
 
 ```
 
-## Installation of LaraDumps
+# LaraDumps – Installation & Quick Usage
 
-Follow the steps below to Installed:
+LaraDumps is a developer-friendly debugging tool for Laravel that lets you send clean, structured debug output to a desktop app — so your browser stays clutter-free.
+
+---
+
+## 📦 Prerequisites
+
+-   PHP & Composer installed
+-   A Laravel project (for package installation)
+-   Internet access to download the **LaraDumps Desktop App**
+
+---
+
+## 🚀 1) Install the Desktop App
+
+1. Open **https://laradumps.dev/**
+2. Click **Get Started** → **Installation** (right-side menu).
+3. Download the latest **Desktop App** for your OS.
+4. Install it and open the application.
+
+> Keep the app running while you debug to receive dumps.
+
+---
+
+## 🧩 2) Install in Your Laravel Project
+
+Run these in your project root:
 
 ```bash
-
-# Visit the site
-https://laradumps.dev/
-click on Get Started
-
-# Right side menu click on installation
-Desktop App
-Download latest version here
-Once downloaded, open it and proceed with the installer.
-
-# After Installation Open Termianl of you Project
-PHP Packages
-1․ Install LaraDumps Package in your Laravel project using Composer.
-Run the command:
+# Install the package (dev only)
 composer require laradumps/laradumps ^4.0 --dev -W
 
-2․ Now, configure LaraDumps. Run the command below:
+# Initialize LaraDumps in this project
 php artisan ds:init $(pwd)
+```
 
-# Globally Installed
-Global LaraDumps
-1․ You can install the global LaraDumps via Composer.
+> **Note (Windows/PowerShell):** If `$(pwd)` doesn't resolve, replace it with your project path, e.g.:
+>
+> ```powershell
+> php artisan ds:init "C:\path\to\your\project"
+> ```
+
+---
+
+## 🌐 3) (Optional) Install Globally
+
+Use this if you want to send dumps from anywhere (CLI scripts, etc.) or quickly set up multiple projects.
+
+```bash
+# Install the global CLI
 composer global require laradumps/global-laradumps
 
-How to install
+# Run the installer
 global-laradumps install
 
-How to uninstall
+# Uninstall if needed
 global-laradumps uninstall
-
-# For more info please visit below link
-https://laradumps.dev/get-started/installation.html
-
-
-# Usage with Laravel Please visit below link
-https://laradumps.dev/debug/laravel.html
-
 ```
+
+---
+
+## 🛠 Usage (Laravel)
+
+### Basic dump
+
+```php
+// routes/web.php
+use Illuminate\Support\Facades\Route;
+
+Route::get('/demo', function () {
+    ds('Hello LaraDumps!');
+    return 'Check the LaraDumps desktop app.';
+});
+```
+
+### Dump variables / arrays / objects
+
+```php
+$user = [
+    'id' => 1,
+    'name' => 'Zeshan',
+    'roles' => ['admin', 'editor'],
+];
+
+ds($user);               // Pretty structured dump
+ds($user['roles']);      // Dump specific part
+```
+
+### In a controller
+
+```php
+// app/Http/Controllers/UserController.php
+namespace App\Http\Controllers;
+
+use App\Models\User;
+
+class UserController extends Controller
+{
+    public function show(int $id)
+    {
+        $user = User::with('roles')->find($id);
+
+        ds('Loaded user', $user);  // Multiple arguments supported
+        return view('users.show', compact('user'));
+    }
+}
+```
+
+### Compare with dd() / dump()
+
+```php
+// Instead of dd($foo) or dump($foo)
+ds($foo);  // Non-blocking; output goes to the desktop app
+```
+
+> Tip: You can sprinkle `ds()` anywhere (routes, controllers, jobs, events, tests) and keep your HTTP responses clean.
+
+---
+
+## 🔧 Configuration
+
+Running `php artisan ds:init $(pwd)` creates configuration files and sets up your project. If you need to change options later, re-run the command or visit the docs.
+
+---
+
+## ❓ Troubleshooting
+
+-   **Nothing shows up?** Make sure the **LaraDumps Desktop App** is open.
+-   **Firewall/Network issues?** Ensure the app is allowed through your firewall.
+-   **Wrong project path?** Re-run `php artisan ds:init` with the correct path.
+
+---
+
+## 📚 Official Docs
+
+-   Installation: https://laradumps.dev/get-started/installation.html
+-   Laravel usage: https://laradumps.dev/debug/laravel.html
+
+---
+
+Happy debugging! 🎉
