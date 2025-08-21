@@ -6,6 +6,7 @@ use App\Models\Quiz;
 use App\Models\Question;
 use App\Models\Answer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class QuestionController extends Controller
 {
@@ -29,7 +30,7 @@ class QuestionController extends Controller
             'answers' => 'array',
             'answers.*.answer_text' => 'required|string|max:255',
             'answers.*.is_correct' => 'nullable|boolean',
-            'correct_answers' => 'array|required_if:question_type,multiple_choice,true_false',
+            // 'correct_answers' => 'array|required_if:question_type,multiple_choice,true_false',
         ]);
 
         $question = $quiz->questions()->create([
